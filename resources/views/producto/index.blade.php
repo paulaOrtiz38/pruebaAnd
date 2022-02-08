@@ -51,6 +51,8 @@
                             @foreach ($productos as $producto )
                                 <tr>
                                     <td>
+                                        <a href="{{route('producto.show',$producto->id)}}" class="btn btn-warning btn-sm">Detalle</a>
+                                        |
                                         <a href="{{route('producto.edit',$producto->id)}}" class="btn btn-warning btn-sm">Editar</a>
                                         |
                                         <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#modal-delete-{{$producto->id}}">
@@ -63,11 +65,7 @@
                                     <td>{{$producto->cantidad}}</td>
                                     <td>{{$producto->estado}}</td>
                                     <td>
-                                        <ul>
-                                        @foreach ($producto->ciudades as $ciudad)
-                                           <li> {{$ciudad->nombre}}</li>
-                                        @endforeach
-                                        </ul>
+
                                     </td>
                                 </tr>
                                 @include('producto.delete')

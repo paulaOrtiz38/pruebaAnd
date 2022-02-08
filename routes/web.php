@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProductoController;
+use App\Http\Controllers\RegistrationController;
 
 /*
 |--------------------------------------------------------------------------
@@ -15,7 +16,15 @@ use App\Http\Controllers\ProductoController;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('/auth/login');
 });
 
-Route::resource('/producto','ProductoController');
+
+
+Auth::routes();
+
+Route::get('/home', 'ProductoController@index')->name('home');
+
+Route::resource('/producto','ProductoController')->middleware('auth');
+
+

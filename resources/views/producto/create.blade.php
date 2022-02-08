@@ -43,6 +43,14 @@
                             <input class="form-control" accept="image/*" type="file" id="imagen" name="imagen">
                         </div>
                     </div>
+                    <div class="form-group">
+                        <label for="ciudades">Ciudades</label>
+                        <select class="form-select" multiple aria-label="multiple select" name="ciudades[]">
+                            @foreach ($ciudades as $id => $ciudad)
+                                <option value="{{$id}}">{{$ciudad}}</option>
+                            @endforeach
+                          </select>
+                    </div>
 
                     <div class="form-group">
                         <input type="submit" class="btn btn-primary" value="Guardar">

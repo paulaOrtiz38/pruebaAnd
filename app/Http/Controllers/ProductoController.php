@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Producto;
+use App\Ciudad;
 use Illuminate\Support\Facades\DB;
 
 
@@ -18,13 +19,13 @@ class ProductoController extends Controller
     public function index(Request $request)
     {
         $texto = trim($request->get('texto'));
-        /*$productos = DB::table('productos')
+        $productos = DB::table('productos')
                      ->select('productos.id','productos.nombre','productos.precio','productos.observaciones','productos.cantidad','productos.estado','productos.imagen')
                      ->where('nombre','LIKE','%'.$texto.'%')
                      ->orWhere('observaciones','LIKE','%'.$texto.'%')
                      ->orderBy('nombre','asc')
-                     ->paginate(10);*/
-                     $productos = Producto::with('ciudades')->get();
+                     ->paginate(10);
+                    // $productos = Producto::with('ciudades')->get();
         return view('producto.index',compact('productos','texto'));
     }
 
@@ -35,7 +36,10 @@ class ProductoController extends Controller
      */
     public function create()
     {
-        return view('producto.create');
+        $producto = new Producto();
+        $ciudades = Ciudad::pluck('nombre','id');
+
+        return view('producto.create', compact('producto','ciudades'));
     }
 
     /**
@@ -61,8 +65,16 @@ class ProductoController extends Controller
         $producto->observaciones = $request->input('observaciones');
         $producto->cantidad = $request->input('cantidad');
         $producto->estado = $request->input('estado');
-
         $producto->save();
+
+        $ciudadArr = [];
+        foreach($request->input('ciudades') as $c){
+            array_push($ciudadArr,$c);
+        }
+
+        if( !empty($ciudadArr) ){
+            $producto->ciudades()->sync($ciudadArr);
+        }
 
         return redirect()->route('producto.index');
     }
@@ -75,7 +87,9 @@ class ProductoController extends Controller
      */
     public function show($id)
     {
-        //
+        $producto = Producto::findOrFail($id);
+        //print_r($producto);exit;
+        return view('producto.show', compact('producto'));
     }
 
     /**
@@ -87,8 +101,15 @@ class ProductoController extends Controller
     public function edit($id)
     {
         $producto = Producto::findOrFail($id);
+        $ciudades = Ciudad::pluck('nombre','id');
+        $cIds = [];
 
-        return view('producto.edit',compact('producto'));
+        foreach ($producto->ciudades as $ciudad){
+            array_push($cIds,$ciudad->id);
+        }
+
+
+        return view('producto.edit',compact('producto','ciudades','cIds'));
     }
 
     /**
@@ -100,7 +121,7 @@ class ProductoController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $producto =Producto::findOrFail($id);
+        $producto = Producto::findOrFail($id);
 
         if($request->hasFile('imagen')){
             $destinoPath = 'images/features/';
@@ -115,9 +136,16 @@ class ProductoController extends Controller
         $producto->observaciones = $request->input('observaciones');
         $producto->cantidad = $request->input('cantidad');
         $producto->estado = $request->input('estado');
-
-
         $producto->save();
+
+        $ciudadArr = [];
+        foreach($request->input('ciudades') as $c){
+            array_push($ciudadArr,$c);
+        }
+
+        if( !empty($ciudadArr) ){
+            $producto->ciudades()->sync($ciudadArr);
+        }
 
        return redirect(route('producto.index'));
     }

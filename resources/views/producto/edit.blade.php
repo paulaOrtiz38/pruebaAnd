@@ -42,8 +42,17 @@
                        <div class="mb-3">
                             <label for="imagen" class="form-label">Imagen</label>
                             <input class="form-control" type="file" id="imagen" name="imagen" >
-                            <strong>{{$producto->imagen}}</strong>
+                            <img src="{{asset($producto->imagen)}}" />
                         </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="ciudades">Ciudades</label>
+                        <select class="form-select" multiple aria-label="multiple select" name="ciudades[]">
+                            @foreach ($ciudades as $id => $ciudad)
+                                <option value="{{$id}}" @if(in_array($id,$cIds)) selected  @endif>{{$ciudad}}</option>
+                            @endforeach
+                          </select>
                     </div>
 
                     <div class="form-group">

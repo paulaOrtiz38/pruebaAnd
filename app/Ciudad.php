@@ -8,11 +8,11 @@ class Ciudad extends Model
 {
     protected $table = "ciudades";
     protected $primaryKey = "id";
-    protected $fillable = ['nombre', 'departamento'];
+    protected $fillable = ['nombre', 'departamento','estado'];
 
     public function productos()
     {
-        return $this->belongsTo('App\Producto');
+        return $this->belongsToMany('App\Producto');
     }
 
 }
