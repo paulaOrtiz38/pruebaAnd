@@ -36,9 +36,6 @@
                         <li class="nav-item">
                             <a class="nav-link" href="{{ route('producto.index') }}">{{ __('Productos') }}</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{-- route('producto.index') --}}">{{ __('Mapa') }}</a>
-                        </li>
                     </ul>
 
                     <!-- Right Side Of Navbar -->

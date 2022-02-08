@@ -13,6 +13,10 @@
         <h4>Gestión Productos</h4>
         <div class="row">
             <div class="col-xl-12">
+                <a href="javascript:history.back()">Regresar</a>
+                <a href="{{ url('/') }}">Home</a>
+            </div>
+            <div class="col-xl-12">
                 <form action="{{route('producto.index')}}" method="GET">
                     <div class="form-row">
                         <div class="col-sm-4 my-1">
@@ -51,7 +55,7 @@
                             @foreach ($productos as $producto )
                                 <tr>
                                     <td>
-                                        <a href="{{route('producto.show',$producto->id)}}" class="btn btn-warning btn-sm">Detalle</a>
+                                        <a href="{{route('producto.show',$producto->id)}}" class="btn btn-success btn-sm">Detalle</a>
                                         |
                                         <a href="{{route('producto.edit',$producto->id)}}" class="btn btn-warning btn-sm">Editar</a>
                                         |

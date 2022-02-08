@@ -88,8 +88,16 @@ class ProductoController extends Controller
     public function show($id)
     {
         $producto = Producto::findOrFail($id);
-        //print_r($producto);exit;
-        return view('producto.show', compact('producto'));
+        $coordenadas = [];
+
+        foreach ($producto->ciudades as $ciudad){
+            array_push($coordenadas,['latitud'=>$ciudad->latitud,'longitud'=>$ciudad->longitud]);
+        }
+
+        //$coordenadas = json_encode($coordenadas);
+
+
+        return view('producto.show', compact('producto','coordenadas'));
     }
 
     /**
