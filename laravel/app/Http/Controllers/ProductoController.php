@@ -29,6 +29,14 @@ class ProductoController extends Controller
         return view('producto.index',compact('productos','texto'));
     }
 
+    public function index_api(Request $request)
+    {
+
+        $productos = Producto::with('ciudades')->get();
+
+        return response()->json($productos,200);
+    }
+
     /**
      * Show the form for creating a new resource.
      *
