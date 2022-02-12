@@ -17,7 +17,7 @@ use App\Http\Controllers\ProductoController;
 */
 
 Route::get('/users', 'UsuarioController@index');
-Route::get('/products', 'ProductoController@index_api');
+Route::get('/products', 'ProductoController@index');
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });

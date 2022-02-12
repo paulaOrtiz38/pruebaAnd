@@ -18,6 +18,19 @@ class ProductoController extends Controller
      */
     public function index(Request $request)
     {
+        $texto = trim($request->get('texto'));
+        $productos = DB::table('productos')
+                     ->select('productos.id','productos.nombre','productos.precio','productos.observaciones','productos.cantidad','productos.estado','productos.imagen')
+                     ->where('nombre','LIKE','%'.$texto.'%')
+                     ->orWhere('observaciones','LIKE','%'.$texto.'%')
+                     ->orderBy('nombre','asc')
+                     ->paginate(10);
+                    // $productos = Producto::with('ciudades')->get();
+        return view('producto.index',compact('productos','texto'));
+    }
+
+    public function index_api(Request $request)
+    {
 
         $productos = Producto::with('ciudades')->get();
 
@@ -150,7 +163,6 @@ class ProductoController extends Controller
             $producto->ciudades()->sync($ciudadArr);
         }
 
-       // return response()->json($producto,200);
        return redirect(route('producto.index'));
     }
 
