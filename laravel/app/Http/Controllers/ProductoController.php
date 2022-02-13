@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Facades\Storage;
 use App\Producto;
 use App\Ciudad;
 use Illuminate\Support\Facades\DB;
@@ -71,7 +72,7 @@ class ProductoController extends Controller
             $producto->ciudades()->sync($ciudadArr);
         }
 
-        return redirect()->route('producto.index');
+        return response()->json($producto,200);
     }
 
     /**
