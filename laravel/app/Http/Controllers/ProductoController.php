@@ -46,12 +46,14 @@ class ProductoController extends Controller
      */
     public function store(Request $request)
     {
+
         $producto = new Producto;
 
         if($request->hasFile('imagen')){
             $destinoPath = 'images/features/';
             $file = $request->file('imagen');
             $nombrefile = time().'-'.$file->getClientOriginalName();
+
             $subir = $request->file('imagen')->move($destinoPath,$nombrefile);
             $producto->imagen = $destinoPath.$nombrefile;
         }
@@ -65,7 +67,9 @@ class ProductoController extends Controller
 
         $ciudadArr = [];
         foreach($request->input('ciudades') as $c){
-            array_push($ciudadArr,$c);
+            if(!empty($c)){
+                 array_push($ciudadArr,$c);
+            }
         }
 
         if( !empty($ciudadArr) ){
@@ -125,9 +129,10 @@ class ProductoController extends Controller
      */
     public function update(Request $request, $id)
     {
+       // return response()->json($request,200);
         $producto = Producto::findOrFail($id);
 
-        if($request->hasFile('imagen')){
+       if($request->hasFile('imagen')){
             $destinoPath = 'images/features/';
             $file = $request->file('imagen');
             $nombrefile = time().'-'.$file->getClientOriginalName();
@@ -142,17 +147,23 @@ class ProductoController extends Controller
         $producto->estado = $request->input('estado');
         $producto->save();
 
+
+
         $ciudadArr = [];
         foreach($request->input('ciudades') as $c){
-            array_push($ciudadArr,$c);
+            if(!empty($c)){
+                array_push($ciudadArr,$c);
+            }
+
         }
 
         if( !empty($ciudadArr) ){
             $producto->ciudades()->sync($ciudadArr);
         }
 
-       // return response()->json($producto,200);
-       return redirect(route('producto.index'));
+
+
+        return response()->json($producto,200);
     }
 
     /**
