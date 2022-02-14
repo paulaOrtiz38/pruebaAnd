@@ -15,7 +15,7 @@ use App\Http\Controllers\ProductoController;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
-
+//rutas api
 Route::get('/users', 'UsuarioController@index');
 Route::get('/products', 'ProductoController@index');
 Route::post('/products', 'ProductoController@store');

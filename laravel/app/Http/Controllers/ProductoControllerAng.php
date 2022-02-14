@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Facades\Storage;
 use App\Producto;
 use App\Ciudad;
 use Illuminate\Support\Facades\DB;
@@ -17,19 +18,6 @@ class ProductoController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function index(Request $request)
-    {
-        $texto = trim($request->get('texto'));
-        $productos = DB::table('productos')
-                     ->select('productos.id','productos.nombre','productos.precio','productos.observaciones','productos.cantidad','productos.estado','productos.imagen')
-                     ->where('nombre','LIKE','%'.$texto.'%')
-                     ->orWhere('observaciones','LIKE','%'.$texto.'%')
-                     ->orderBy('nombre','asc')
-                     ->paginate(10);
-                    // $productos = Producto::with('ciudades')->get();
-        return view('producto.index',compact('productos','texto'));
-    }
-
-    public function index_api(Request $request)
     {
 
         $productos = Producto::with('ciudades')->get();
@@ -58,12 +46,14 @@ class ProductoController extends Controller
      */
     public function store(Request $request)
     {
+
         $producto = new Producto;
 
         if($request->hasFile('imagen')){
             $destinoPath = 'images/features/';
             $file = $request->file('imagen');
             $nombrefile = time().'-'.$file->getClientOriginalName();
+
             $subir = $request->file('imagen')->move($destinoPath,$nombrefile);
             $producto->imagen = $destinoPath.$nombrefile;
         }
@@ -77,14 +67,16 @@ class ProductoController extends Controller
 
         $ciudadArr = [];
         foreach($request->input('ciudades') as $c){
-            array_push($ciudadArr,$c);
+            if(!empty($c)){
+                 array_push($ciudadArr,$c);
+            }
         }
 
         if( !empty($ciudadArr) ){
             $producto->ciudades()->sync($ciudadArr);
         }
 
-        return redirect()->route('producto.index');
+        return response()->json($producto,200);
     }
 
     /**
@@ -137,9 +129,10 @@ class ProductoController extends Controller
      */
     public function update(Request $request, $id)
     {
+       // return response()->json($request,200);
         $producto = Producto::findOrFail($id);
 
-        if($request->hasFile('imagen')){
+       if($request->hasFile('imagen')){
             $destinoPath = 'images/features/';
             $file = $request->file('imagen');
             $nombrefile = time().'-'.$file->getClientOriginalName();
@@ -154,16 +147,23 @@ class ProductoController extends Controller
         $producto->estado = $request->input('estado');
         $producto->save();
 
+
+
         $ciudadArr = [];
         foreach($request->input('ciudades') as $c){
-            array_push($ciudadArr,$c);
+            if(!empty($c)){
+                array_push($ciudadArr,$c);
+            }
+
         }
 
         if( !empty($ciudadArr) ){
             $producto->ciudades()->sync($ciudadArr);
         }
 
-       return redirect(route('producto.index'));
+
+
+        return response()->json($producto,200);
     }
 
     /**
